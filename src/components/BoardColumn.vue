@@ -1,23 +1,23 @@
 <template>
-  <div
-    class="bg-gray-200 p-2 text-left shadow rounded"
-    style="min-width: 330px;"
-    draggable
-    @dragstart.self="onDragStart"
-    @drop="onDrop"
-    @dragover.prevent
-    @dragenter.prevent
-  >
-    <div class="mb-2 mx-2 font-bold">
-      {{ column.name }}
-    </div>
-    <ColumnItems :items="column.items" :column="column" />
-  </div>
+  <Droppable @dropped="onDropped">
+    <Draggable
+      :dataTransfer="{ columnId: column.id, type: 'column' }"
+      class="bg-gray-200 p-2 text-left shadow rounded"
+      style="min-width: 330px;"
+    >
+      <div class="mb-2 mx-2 font-bold">
+        {{ column.name }}
+      </div>
+      <ColumnItems :items="column.items" :column="column" />
+    </Draggable>
+  </Droppable>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import ColumnItems from "../components/ColumnItems.vue";
+import ColumnItems from "./ColumnItems.vue";
+import Draggable from "./Draggable";
+import Droppable from "./Droppable";
 
 export default {
   props: {
@@ -28,24 +28,20 @@ export default {
   },
   components: {
     ColumnItems,
+    Draggable,
+    Droppable,
   },
   computed: {
     ...mapGetters(["getColumn"]),
   },
   methods: {
-    onDragStart({ dataTransfer }) {
-      dataTransfer.dropEffect = "move";
-      dataTransfer.effectAllowed = "move";
-      dataTransfer.setData("columnId", this.column.id);
-      dataTransfer.setData("type", "column");
-    },
-    onDrop({ dataTransfer }) {
-      if (dataTransfer.getData("type") !== "column") {
+    onDropped({ type, columnId }) {
+      if (type !== "column") {
         return;
       }
 
       this.$store.commit("MOVE_COLUMN", {
-        column: this.getColumn(dataTransfer.getData("columnId")),
+        column: this.getColumn(columnId),
         targetColumn: this.column,
       });
     },

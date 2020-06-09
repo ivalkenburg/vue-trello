@@ -1,18 +1,19 @@
 <template>
-  <div
-    class="shadow p-2 rounded bg-white"
-    draggable
-    @dragstart="onDragStart"
+  <Draggable
+    :dataTransfer="{ type: 'item', itemId: item.id, columnId: column.id }"
     @click="onClick"
+    class="shadow p-2 rounded bg-white"
   >
     <div class="font-semibold">{{ item.name }}</div>
     <p v-if="item.description" class="text-sm mt-1">
       {{ item.description }}
     </p>
-  </div>
+  </Draggable>
 </template>
 
 <script>
+import Draggable from "./Draggable";
+
 export default {
   props: {
     item: {
@@ -24,16 +25,12 @@ export default {
       type: Object,
     },
   },
+  components: {
+    Draggable,
+  },
   methods: {
     onClick() {
       this.$router.push({ name: "item", params: { id: this.item.id } });
-    },
-    onDragStart({ dataTransfer }) {
-      dataTransfer.dropEffect = "move";
-      dataTransfer.effectAllowed = "move";
-      dataTransfer.setData("itemId", this.item.id);
-      dataTransfer.setData("columnId", this.column.id);
-      dataTransfer.setData("type", "item");
     },
   },
 };
