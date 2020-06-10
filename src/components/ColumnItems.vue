@@ -1,9 +1,10 @@
 <template>
   <Droppable @dropped="onDrop" class="space-y-2">
     <ColumnItem
-      v-for="item in items"
+      v-for="(item, index) in items"
       :key="item.id"
       :item="item"
+      :itemIndex="index"
       :column="column"
     />
     <input
@@ -40,15 +41,13 @@ export default {
   },
   methods: {
     onDrop({ type, columnId, itemId }) {
-      if (type !== "item") {
+      if (type !== "item" || this.items.length > 0) {
         return;
       }
 
-      const sourceColumn = this.getColumn(columnId);
-
       this.$store.commit("MOVE_ITEM", {
         item: this.getItem(itemId),
-        sourceColumn,
+        sourceColumn: this.getColumn(columnId),
         targetColumn: this.column,
       });
     },

@@ -22,11 +22,11 @@ const mutations = {
   UPDATE_ITEM(state, { item, field, value }) {
     item[field] = value;
   },
-  MOVE_ITEM(state, { item, sourceColumn, targetColumn }) {
+  MOVE_ITEM(state, { item, sourceColumn, targetColumn, targetIndex }) {
     const itemIndex = sourceColumn.items.indexOf(item);
 
     sourceColumn.items.splice(itemIndex, 1);
-    targetColumn.items.push(item);
+    targetColumn.items.splice(targetIndex, 0, item);
   },
   ADD_COLUMN(state, { name }) {
     state.board.columns.push({ id: nanoid(), name, items: [] });

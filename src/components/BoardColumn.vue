@@ -16,8 +16,8 @@
 <script>
 import { mapGetters } from "vuex";
 import ColumnItems from "./ColumnItems.vue";
-import Draggable from "./Draggable";
-import Droppable from "./Droppable";
+import Draggable from "./Draggable.vue";
+import Droppable from "./Droppable.vue";
 
 export default {
   props: {
